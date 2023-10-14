@@ -60,7 +60,7 @@
                             <button *ngIf="item.status === 'not-completed'" (click)="editTodo(i)">
                                 Edit
                             </button>
-                            <Button (click)="deleteTodo(item.todo_id)" *ngIf="item.status === 'not-completed'">
+                            <Button (click)="deleteTodo(item.todo_id)">
                                 Delete
                             </Button>
                         </div>
