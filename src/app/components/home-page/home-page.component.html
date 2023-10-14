@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="wrapper">
+        <div class="header" #header>
+            <h2>To<span>do</span>-list</h2>
+            <div class="profile-wrapper">
+                <p>Welcome {{user.displayName}}</p>
+                <div class="img-wrapper profile-img-wrapper" (click)="toggleLogoutDropdown()">
+                    <img [src]="user.photoURL" class="profile-img-wrapper" alt="">
+                </div>
+                <div class="btn-wrapper" *ngIf="signoutDropdown">
+                    <button class="sign-out-btn" (click)="signout()">Signout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container todo-add-container">
+    <div class="wrapper">
+        <h2>Add Todo</h2>
+        <form class="inputs-wrapper" [formGroup]="formData" (submit)="fetchFormDetails()">
+            <input type="text" placeholder="Todo Details" formControlName="todoDetails"
+                (input)="replaceEmptySpace($event)">
+            <input type="date" formControlName="date" [min]="!editMode && today">
+            <button type="submit" [disabled]="!formData.valid" *ngIf="!editMode">Add Todo</button>
+            <button [disabled]="!formData.valid" type="button" *ngIf="editMode"
+                (click)="updateTodoWithChanges()">Update</button>
+            <button *ngIf="editMode" type="button" (click)="cancelEdit()" class="cancel-btn">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<div class="container todo-list-container">
+    <div class="wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Created Date</th>
+                    <th>Todo</th>
+                    <th>Due Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!todoData.length">
+                    <td colspan="5" class="no-todo-data">No Data Available</td>
+                </tr>
+                <tr *ngFor="let item of todoData; let i = index"
+                    [ngClass]="{'task-completed' : item.status === 'completed', 'current-edit-row' : editMode && editItemNumber === i}">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.generatedDate | date }}</td>
+                    <td>{{ item.todoItem }}</td>
+                    <td>{{ item.todoDate }}</td>
+                    <td>
+                        <div class="btns-wrapper" *ngIf="!editMode">
+                            <button (click)="changeTodoStatus(i)">
+                                {{ item.status === "completed" ? "Not-completed" : "Completed" }}
+                            </button>
+                            <button *ngIf="item.status === 'not-completed'" (click)="editTodo(i)">
+                                Edit
+                            </button>
+                            <Button (click)="deleteTodo(item.todo_id)" *ngIf="item.status === 'not-completed'">
+                                Delete
+                            </Button>
+                        </div>
+                        <p *ngIf="editMode">***</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
